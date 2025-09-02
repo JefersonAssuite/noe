@@ -74,6 +74,7 @@ const CadastroCuidador = () => {
 
       await addDoc(collection(db, "usuarios", user.uid, "dadosCuidador"), {
         ...data,
+         profissional: dados.profissional,
         fotosDocumentos: fotosDocsUrls,
         fotosLocal: fotosLocalUrls,
         criadoEm: new Date(),
@@ -255,6 +256,18 @@ const CadastroCuidador = () => {
                 <TouchableOpacity key={opcao} onPress={() => setValue('climatizado', opcao)}
                   style={{ marginRight: 20 }}>
                   <Text>{watch('climatizado') === opcao ? '🔘' : '⚪'} {opcao}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <Text>É profissional de banho e tosa em domicílio?</Text>
+            <View style={{ flexDirection: 'row' }}>
+              {['sim', 'não'].map((opcao) => (
+                <TouchableOpacity
+                  key={opcao}
+                  onPress={() => setValue('profissional', opcao)}
+                  style={{ marginRight: 20 }}
+                >
+                  <Text>{watch('profissional') === opcao ? '🔘' : '⚪'} {opcao}</Text>
                 </TouchableOpacity>
               ))}
             </View>
