@@ -14,6 +14,11 @@ const CadastroCuidador = () => {
     defaultValues: {
       fotosDocumentos: [],
       fotosLocal: [],
+      telefone1: "",
+      telefone2: "",
+      instagram: "",
+      cnpj:"",
+      observacao:"",
     },
   });
 
@@ -73,12 +78,12 @@ const CadastroCuidador = () => {
       }
 
       await addDoc(collection(db, "usuarios", user.uid, "dadosCuidador"), {
-        ...data,
-         profissional: dados.profissional,
-        fotosDocumentos: fotosDocsUrls,
-        fotosLocal: fotosLocalUrls,
-        criadoEm: new Date(),
-      });
+  ...data,
+   profissional: data.profissional,
+  fotosDocumentos: fotosDocsUrls,
+  fotosLocal: fotosLocalUrls,
+  criadoEm: new Date(),
+});
 
       alert("Dados salvos com sucesso!");
       router.replace("/auth/formcuidador")

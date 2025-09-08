@@ -18,8 +18,8 @@ export default function HomeScreen() {
   const actions = [
     { label: "Meus Pets", icon: "paw", route: "/meus-pets" },
     { label: "Profissionais", icon: "briefcase", route: "/profissionais" },
-    { label: "Locais", icon: "location", route: "/locais" },
-    { label: "PetShop", icon: "storefront", route: "/estabelecimentos" },
+    { label: "Meus Locais", icon: "location", route: "/locais" },
+    { label: "Hotéis", icon: "storefront", route: "/estabelecimentos" },
     { label: "Favoritos", icon: "heart", route: "/favoritos" },
      { label: "Fale Conosco", icon: "chatbubbles", route: "/fale-conosco" },
   ];

@@ -1,5 +1,5 @@
 import { collectionGroup, getDocs, query, where } from "firebase/firestore";
-import { Box, FlatList, Text } from "native-base";
+import { Box, FlatList, Text, VStack } from "native-base";
 import { useEffect, useState } from "react";
 import { db } from "../../../services/FirebaseConfig";
 
@@ -9,7 +9,6 @@ export default function Profissionais() {
   useEffect(() => {
     const fetchProfissionais = async () => {
       try {
-        // Busca todos documentos em qualquer subcoleção "dadosCuidador"
         const q = query(
           collectionGroup(db, "dadosCuidador"),
           where("profissional", "==", "sim")
@@ -30,43 +29,57 @@ export default function Profissionais() {
   }, []);
 
   return (
-    <Box flex={1} bg="#1BC5B7" p={4}>
-      <Text fontSize="2xl" bold color="white" mb={6}>
-        🛁 Profissionais de Banho & Tosa
-      </Text>
+    <Box flex={1} bg="#1BC5B7">
+      {/* Título */}
+      <Box pt={12} px={4}>
+        <Text fontSize="2xl" bold color="white">
+          Profissionais
+        </Text>
+      </Box>
 
-      <FlatList
-        data={profissionais}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <Box
-            bg="white"
-            rounded="lg"
-            p={4}
-            mb={4}
-            shadow={2}
-            minH={100}
-          >
-            <Text fontSize="lg" bold color="black">
-              {item.nome || "Sem nome"}
-            </Text>
-            <Text
-              fontSize="sm"
-              color="gray.600"
-              numberOfLines={2}
-              ellipsizeMode="tail"
-              mt={2}
+      {/* Conteúdo branco */}
+      <Box
+        flex={1}
+        bg="white"
+        mt={4} // espaço do topo
+        borderTopLeftRadius={30}
+        borderTopRightRadius={30}
+        p={4}
+      >
+        <FlatList
+          data={profissionais}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <Box
+              bg="#F9F9F9"
+              rounded="lg"
+              p={4}
+              mb={4}
+              shadow={2}
+              minH={100}
             >
-              {item.observacao || "Sem observações."}
+              <VStack space={2}>
+                <Text fontSize="lg" bold color="black">
+                  {item.nome || "Sem nome"}
+                </Text>
+                <Text fontSize="sm" color="gray.600" numberOfLines={2} ellipsizeMode="tail">
+                  {item.observacao || "Sem observações."}
+                </Text>
+                {item.estabelecimento === "Sim" && (
+                  <Text fontSize="sm" color="gray.800">
+                    CNPJ: {item.cnpj || "Não informado"}
+                  </Text>
+                )}
+              </VStack>
+            </Box>
+          )}
+          ListEmptyComponent={
+            <Text textAlign="center" mt={10} color="gray.500">
+              Nenhum profissional encontrado
             </Text>
-          </Box>
-        )}
-        ListEmptyComponent={
-          <Text textAlign="center" color="white" mt={10}>
-            Nenhum profissional encontrado
-          </Text>
-        }
-      />
+          }
+        />
+      </Box>
     </Box>
   );
 }

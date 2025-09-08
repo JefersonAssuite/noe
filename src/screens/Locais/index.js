@@ -1,109 +1,93 @@
-// app/(tabs)/locais.js
-import { getAuth } from "firebase/auth";
-import { collection, getDocs, getFirestore } from "firebase/firestore";
-import { Box, HStack, Image, Skeleton, Text, VStack } from "native-base";
+import { useRouter } from "expo-router";
+import { collection, getDocs } from "firebase/firestore";
+import { Box, FlatList, Image, Text, VStack } from "native-base";
 import { useEffect, useState } from "react";
-import { ScrollView } from "react-native";
-import { app } from "../../../services/FirebaseConfig";
+import { TouchableOpacity } from "react-native";
+import { auth, db } from "../../../services/FirebaseConfig";
 
-const Locais = () => {
+export default function Locais() {
   const [locais, setLocais] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchLocais = async () => {
-      try {
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const user = auth.currentUser;
+      const user = auth.currentUser;
+      if (!user) return;
 
-        if (!user) return;
+      const locaisRef = collection(db, "usuarios", user.uid, "dadosCuidador");
+      const snapshot = await getDocs(locaisRef);
 
-        const querySnapshot = await getDocs(
-          collection(db, "usuarios", user.uid, "dadosCuidador")
-        );
+      // Pega apenas locais que são estabelecimentos
+      const lista = snapshot.docs
+        .map((doc) => ({ id: doc.id, ...doc.data() }))
+        .filter((item) => item.estabelecimento === "Sim");
 
-        const locaisData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        setLocais(locaisData);
-      } catch (error) {
-        console.error("Erro ao buscar locais:", error);
-      } finally {
-        setLoading(false);
-      }
+      setLocais(lista);
     };
 
     fetchLocais();
   }, []);
 
+  // Sempre 3 slots
+  const widgets = [0, 1, 2].map((i) => locais[i] || null);
+
   return (
-    <Box flex={1} bg="#F9F9F9" p={4}>
-      <Text fontSize="2xl" fontWeight="bold" mb={4}>
-        Meus Locais
+    <Box flex={1} bg="#78C5BE" p={4} alignItems="center">
+      <Text fontSize="2xl" bold color="white" mt={10} mb={6}>
+        🏠 Locais
       </Text>
 
-      {loading ? (
-        <VStack space={4}>
-          <Skeleton h={120} rounded="lg" />
-          <Skeleton h={120} rounded="lg" />
-        </VStack>
-      ) : (
-        <ScrollView>
-          {locais.map((item) => (
-            <Box
-              key={item.id}
-              bg="white"
-              p={4}
-              rounded="lg"
-              shadow={2}
-              mb={4}
-            >
-              {/* Fotos do Local */}
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <HStack space={2}>
-                  {item.fotosLocal?.map((foto, index) => (
-                    <Image
-                      key={index}
-                      source={{ uri: foto }}
-                      alt="Foto Local"
-                      size="xl"
-                      rounded="lg"
-                    />
-                  ))}
-                </HStack>
-              </ScrollView>
-
-              {/* Informações */}
-              <VStack mt={3} space={1}>
-                <Text fontSize="lg" bold>
-                  {item.ondeRecebe || "Local não informado"}
+      <FlatList
+        data={widgets}
+        keyExtractor={(_, index) => index.toString()}
+        numColumns={2} // 2 por linha
+        columnWrapperStyle={{ justifyContent: "center", gap: 16 }}
+        contentContainerStyle={{ gap: 16, paddingBottom: 40 }}
+        renderItem={({ item: local, index }) => (
+          <VStack
+            w={140}
+            h={140}
+            bg={local ? "white" : index === 0 ? "gray.300" : "gray.200"}
+            borderRadius={10}
+            alignItems="center"
+            justifyContent="center"
+            opacity={local ? 1 : 0.5}
+            p={2}
+          >
+            {local ? (
+              <>
+                <Image
+                  source={{
+                    uri: local.fotosLocal?.[0] || "https://via.placeholder.com/140",
+                  }}
+                  alt={local.ondeRecebe}
+                  w="100%"
+                  h="70%"
+                  borderRadius={8}
+                  resizeMode="cover"
+                />
+                <Text mt={2} bold color="black" numberOfLines={1}>
+                  {local.ondeRecebe}
                 </Text>
-                <Text color="gray.600">
-                  {item.rua}, {item.numero} - {item.cidade}/{item.estado}
+                <Text fontSize="xs" color="gray.600" numberOfLines={1}>
+                  {local.cnpj || "Sem CNPJ"}
                 </Text>
-                <Text>
-                  Área aberta:{" "}
-                  {item.areaAberta === "Sim" ? "✅ Sim" : "❌ Não"}
+              </>
+            ) : (
+              <TouchableOpacity
+                onPress={() =>
+                  index === 0 ? router.push("/auth/formcuidador") : null
+                }
+                style={{ alignItems: "center" }}
+              >
+                <Text bold color="gray.600" textAlign="center">
+                  {index === 0 ? "Adicionar Local +" : "Vazio"}
                 </Text>
-                <Text>
-                  Climatizado:{" "}
-                  {item.climatizado === "Sim" ? "✅ Sim" : "❌ Não"}
-                </Text>
-                {item.observacao && (
-                  <Text italic color="gray.500">
-                    "{item.observacao}"
-                  </Text>
-                )}
-              </VStack>
-            </Box>
-          ))}
-        </ScrollView>
-      )}
+              </TouchableOpacity>
+            )}
+          </VStack>
+        )}
+      />
     </Box>
   );
-};
-
-export default Locais;
+}

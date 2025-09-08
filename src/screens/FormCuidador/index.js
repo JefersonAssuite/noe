@@ -61,7 +61,7 @@ const CadastroPerfil = () => {
       await addDoc(collection(db, "usuarios", user.uid, "perfil"), {
         formacaoVeterinaria: data.formacaoVeterinaria,
         gostaAnimais: data.gostaAnimais,
-         profissional: dados.profissional,
+       
         tempoLivre: data.tempoLivre,
         profissao: data.profissao,
         informacaoImportante: data.informacaoImportante,
