@@ -3,6 +3,7 @@ import { Box, HStack, Image, Text, VStack } from "native-base";
 import { useEffect, useState } from "react";
 import { Dimensions, Alert as RNAlert } from "react-native";
 import { auth, db } from "../../../services/FirebaseConfig";
+import { BackHeader } from "../../components/BackHeader";
 
 export default function MeusPets() {
   const [pets, setPets] = useState([]);
@@ -31,7 +32,8 @@ export default function MeusPets() {
   const widgetSize = screenWidth / 4; // cada widget ocupa 1/4 da largura da tela, deixando espaço entre eles
 
   return (
-    <Box flex={1} alignItems="center" justifyContent="flex-start" bg="#1BC5B7" p={4}>
+    <Box flex={1}  justifyContent="flex-start" bg="#1BC5B7" p={4}>
+       <BackHeader/>
       <Text fontSize="2xl" bold color="white" mt={20} mb={10} textAlign="center">
         🐾 Meus Pets
       </Text>

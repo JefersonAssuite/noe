@@ -4,6 +4,7 @@ import { Box, FlatList, Image, Text, VStack } from "native-base";
 import { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { auth, db } from "../../../services/FirebaseConfig";
+import { BackHeader } from "../../components/BackHeader";
 
 export default function Locais() {
   const [locais, setLocais] = useState([]);
@@ -32,10 +33,14 @@ export default function Locais() {
   const widgets = [0, 1, 2].map((i) => locais[i] || null);
 
   return (
-    <Box flex={1} bg="#78C5BE" p={4} alignItems="center">
-      <Text fontSize="2xl" bold color="white" mt={10} mb={6}>
-        🏠 Locais
+    <Box flex={1} bg="#78C5BE"  >
+
+      <BackHeader/>
+            <Box alignItems={"flex-start"}  >
+      <Text fontSize="2xl" bold color="white" p={4} mt={10} mb={6}>
+        Meus Locais
       </Text>
+      </Box>
 
       <FlatList
         data={widgets}

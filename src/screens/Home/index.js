@@ -21,7 +21,7 @@ export default function HomeScreen() {
     { label: "Meus Locais", icon: "location", route: "/locais" },
     { label: "Hotéis", icon: "storefront", route: "/estabelecimentos" },
     { label: "Favoritos", icon: "heart", route: "/favoritos" },
-     { label: "Fale Conosco", icon: "chatbubbles", route: "/fale-conosco" },
+     { label: "Fale Conosco", icon: "chatbubbles", route: "/faleconosco" },
   ];
 
   useEffect(() => {

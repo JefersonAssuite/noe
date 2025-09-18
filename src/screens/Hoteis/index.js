@@ -4,6 +4,7 @@ import { Box, FlatList, Image, Text, VStack } from "native-base";
 import { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { db } from "../../../services/FirebaseConfig";
+import { BackHeader } from "../../components/BackHeader";
 
 export default function Hoteis() {
   const [hoteis, setHoteis] = useState([]);
@@ -36,6 +37,7 @@ export default function Hoteis() {
 
   return (
     <Box flex={1} bg="#78C5BE" p={4}>
+      <BackHeader/>
       <Text fontSize="2xl" bold color="white" mb={6} textAlign="center">
         🏨 Hotéis
       </Text>

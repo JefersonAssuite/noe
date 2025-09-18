@@ -1,11 +1,13 @@
+import { useRouter } from 'expo-router';
 import { collectionGroup, getDocs, query, where } from "firebase/firestore";
 import { Box, FlatList, Text, VStack } from "native-base";
 import { useEffect, useState } from "react";
 import { db } from "../../../services/FirebaseConfig";
+import { BackHeader } from "../../components/BackHeader";
 
 export default function Profissionais() {
   const [profissionais, setProfissionais] = useState([]);
-
+  const router = useRouter();
   useEffect(() => {
     const fetchProfissionais = async () => {
       try {
@@ -30,8 +32,9 @@ export default function Profissionais() {
 
   return (
     <Box flex={1} bg="#1BC5B7">
+     <BackHeader/>
       {/* Título */}
-      <Box pt={12} px={4}>
+      <Box  px={4}>
         <Text fontSize="2xl" bold color="white">
           Profissionais
         </Text>
